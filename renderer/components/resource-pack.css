@@ -1,0 +1,217 @@
+.rp-recipe-panel {
+  margin-bottom: 18px;
+  padding: 18px;
+}
+.rp-recipe-panel .tb-panel-heading {
+  margin-bottom: 12px;
+}
+.rp-recipe-panel .tb-panel-heading h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.rp-recipe-panel .tb-panel-heading > span {
+  color: var(--tb-muted);
+  font-size: 11px;
+}
+.rp-recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.toolbox .rp-recipe-grid > button {
+  justify-content: flex-start;
+  white-space: normal;
+  min-height: 44px;
+  font-size: 12px;
+}
+.toolbox .rp-recipe-grid > button[aria-pressed='true'] {
+  border-color: var(--tb-pink);
+  color: var(--tb-pink);
+  background: #eda8bf14;
+}
+.rp-recipe-grid svg {
+  flex-shrink: 0;
+}
+.rp-workflow-help {
+  color: var(--tb-muted);
+  font-size: 11px;
+  padding-top: 14px;
+  line-height: 1.65;
+}
+.rp-workflow-help summary {
+  cursor: pointer;
+  color: var(--tb-text);
+}
+.rp-workflow-help ol {
+  padding-left: 19px;
+  margin: 10px 0 0;
+}
+.rp-workflow-help li + li {
+  margin-top: 7px;
+}
+.rp-empty {
+  min-height: 250px;
+}
+.rp-readiness {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+  border-radius: 7px;
+  border: 1px solid #9dd9b549;
+  background: #9dd9b509;
+  color: #b9e3ca;
+}
+.rp-readiness[data-state='missing'],
+.rp-readiness[data-state='review'] {
+  color: #efcca0;
+  border-color: #efcca045;
+  background: #efcca008;
+}
+.rp-readiness > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.rp-readiness small {
+  color: var(--tb-muted);
+  font-size: 10px;
+}
+.rp-required-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0 0 16px;
+}
+.rp-required-list > li,
+.rp-required-list > li > span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.rp-required-list > li {
+  justify-content: space-between;
+  font-size: 11px;
+}
+.rp-required-list > li > span {
+  min-width: 0;
+}
+.rp-required-list svg {
+  flex-shrink: 0;
+  color: #e9c191;
+}
+.rp-required-list [data-present='true'] svg {
+  color: #b9e3ca;
+}
+.rp-required-list small {
+  color: var(--tb-muted);
+  font-size: 10px;
+  flex-shrink: 0;
+}
+.rp-dictionaries {
+  border-top: 1px solid var(--tb-line);
+  margin-top: 10px;
+  padding: 15px 0 5px;
+}
+.rp-dictionary-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.rp-dictionary-heading h4 {
+  margin: 0 0 4px;
+  font-size: 12px;
+}
+.rp-dictionary-heading small {
+  color: var(--tb-muted);
+  font-size: 10px;
+}
+.rp-dictionaries > details {
+  padding: 10px 0;
+  border-top: 1px solid var(--tb-line);
+  font-size: 11px;
+}
+.rp-dictionaries > details > summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  cursor: pointer;
+}
+.rp-dictionaries > details > summary > span {
+  overflow-wrap: anywhere;
+}
+.rp-dictionaries > details > summary > small {
+  color: var(--tb-muted);
+  flex-shrink: 0;
+}
+.rp-dictionaries details p {
+  color: #efcca0;
+  font-size: 10px;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+.rp-texture-entries {
+  max-height: 180px;
+  overflow: auto;
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.rp-texture-entries > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.rp-texture-entries > div > code {
+  overflow-wrap: anywhere;
+  color: var(--tb-pink);
+}
+.rp-texture-entries > div > span {
+  color: var(--tb-muted);
+  white-space: nowrap;
+  font-size: 10px;
+}
+.rp-advanced {
+  color: var(--tb-muted);
+  font-size: 11px;
+  margin: 2px 0 8px;
+}
+.rp-advanced summary {
+  cursor: pointer;
+  color: var(--tb-text);
+}
+.rp-advanced > label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding-top: 12px;
+}
+.rp-export-panel label small {
+  font-size: 10px;
+  line-height: 1.5;
+  color: var(--tb-muted);
+}
+.rp-pack-hint {
+  color: #efcca0;
+  line-height: 1.6;
+  font-size: 10px;
+  margin: 0 0 10px;
+}
+.tb-resource-warnings [data-severity='missing'] {
+  color: #f2b0b0;
+}
+@media (max-width: 900px) {
+  .rp-recipe-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .rp-recipe-panel .tb-panel-heading > span {
+    display: none;
+  }
+}

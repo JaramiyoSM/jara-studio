@@ -1,0 +1,419 @@
+.surface-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #100b10d9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 18px;
+  backdrop-filter: blur(10px);
+}
+.surface-dialog {
+  width: min(1540px, 100%);
+  height: min(920px, 100%);
+  display: flex;
+  flex-direction: column;
+  background: #221a20;
+  border: 1px solid #725263;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 25px 100px #0008;
+}
+.surface-dialog > header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #4a333f;
+  background: linear-gradient(120deg, #34232e, #221a20);
+}
+.surface-dialog h1 {
+  font-size: 24px;
+  letter-spacing: -0.7px;
+  margin: 5px 0;
+}
+.surface-dialog header p {
+  color: #c2a9b7;
+  font-size: 11px;
+  margin: 4px 0 0;
+}
+.surface-dialog .eyebrow {
+  font-size: 9px;
+}
+.surface-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #4a333f;
+  flex-wrap: wrap;
+  background: #291e26;
+}
+.surface-toolbar label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  color: #ceb6c4;
+}
+.surface-toolbar input[type='range'] {
+  width: 80px;
+}
+.surface-toolbar input[type='color'] {
+  width: 30px;
+  height: 27px;
+  padding: 2px;
+}
+.surface-toolbar b {
+  font-size: 9px;
+  width: 34px;
+}
+.surface-divider {
+  height: 22px;
+  border-right: 1px solid #604351;
+  margin: 0 7px;
+}
+.surface-body {
+  display: grid;
+  grid-template-columns: minmax(300px, 1.1fr) minmax(260px, 1fr) 248px;
+  min-height: 0;
+  flex: 1;
+}
+.surface-artboard {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+  border-right: 1px solid #4a333f;
+}
+.surface-canvas-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  font-size: 10px;
+  color: #ceb6c4;
+}
+.surface-canvas-options label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.surface-canvas-options select {
+  font-size: 10px;
+  padding: 3px;
+  min-width: 62px;
+}
+.surface-canvas-options span {
+  font-size: 9px;
+}
+.surface-canvas-scroll {
+  flex: 1;
+  min-height: 0;
+  overflow: auto;
+  background: repeating-conic-gradient(#322932 0% 25%, #29212a 0% 50%) 0 0/24px 24px;
+  border: 1px solid #58404e;
+  border-radius: 8px;
+  scrollbar-width: thin;
+  display: block;
+}
+.surface-canvas-stack {
+  position: relative;
+  aspect-ratio: 1;
+  margin: 0 auto;
+}
+.surface-canvas-stack canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+.surface-canvas-stack .surface-uv-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.surface-artboard > p {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #c2a9b7;
+  margin: 8px 2px 0;
+}
+.surface-artboard > p.hint {
+  font-size: 9px;
+  color: #ab8b9e;
+}
+.surface-preview-column {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  border-right: 1px solid #4a333f;
+  background: #191419;
+}
+.surface-preview-heading {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 14px 16px;
+  font-size: 10px;
+  color: #d9bfcf;
+  border-bottom: 1px solid #362730;
+}
+.surface-preview-heading b {
+  font-size: 12px;
+  color: #f5e6ed;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.surface-preview {
+  flex: 1;
+  min-height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+.surface-preview canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.surface-preview p {
+  position: absolute;
+  inset: 30%;
+  font-size: 12px;
+  text-align: center;
+  color: #dab7ca;
+}
+.surface-neutral {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  padding: 12px 14px;
+  background: #281d25;
+  border-top: 1px solid #4a333f;
+}
+.surface-preview-column > .hint {
+  padding: 0 14px 12px;
+  margin: 0;
+  background: #281d25;
+  font-size: 9px;
+}
+.surface-layers {
+  padding: 14px 12px;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+.surface-layers h2 {
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 14px;
+}
+.surface-layers h2 small {
+  margin-left: auto;
+  color: #b391a6;
+  font-size: 9px;
+}
+.surface-add-layers {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.surface-add-layers .button {
+  font-size: 9px;
+  padding: 7px 8px;
+}
+.surface-layer-list {
+  border: 1px solid #543947;
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 12px;
+  max-height: 210px;
+  overflow: auto;
+}
+.surface-layer-list > div {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  min-height: 34px;
+  border-bottom: 1px solid #3d2b35;
+  padding-right: 4px;
+}
+.surface-layer-list > div.active {
+  background: #513344;
+}
+.surface-layer-name {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+  padding: 8px;
+  color: #ecd4e1;
+  background: transparent;
+  border: 0;
+  font-size: 10px;
+}
+.surface-layer-name span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.surface-base-layer {
+  font-size: 9px;
+  color: #ad8da0;
+  padding: 8px;
+  gap: 8px !important;
+  background: #21181f;
+}
+.surface-layer-controls > label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  margin: 8px 0;
+}
+.surface-layer-controls > label input[type='text'],
+.surface-layer-controls > label input:not([type]) {
+  min-width: 0;
+  width: 140px;
+  font-size: 10px;
+  padding: 6px;
+}
+.surface-layer-controls input[type='range'] {
+  width: 125px;
+}
+.surface-layer-controls input[type='color'] {
+  width: 40px;
+  height: 27px;
+  padding: 2px;
+}
+.surface-numbers {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 9px;
+  margin-top: 12px;
+}
+.surface-numbers label {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 9px;
+  color: #ceb0c0;
+}
+.surface-numbers input {
+  width: 100%;
+  min-width: 0;
+  font-size: 10px;
+  padding: 6px;
+}
+.surface-layers > .hint {
+  font-size: 9px;
+  line-height: 1.6;
+  margin-top: 15px;
+}
+.surface-dialog > footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-top: 1px solid #5b3b4d;
+  background: #2d1e28;
+}
+.surface-dialog > footer p {
+  font-size: 10px;
+  line-height: 1.6;
+  color: #c6a8ba;
+  max-width: 630px;
+  margin: 0 auto 0 0;
+}
+.surface-dialog > footer .button {
+  white-space: nowrap;
+  font-size: 11px;
+}
+.surface-error {
+  padding: 9px 18px;
+  background: #653148;
+  font-size: 11px;
+  color: #ffe8ef;
+}
+.surface-layer-order {
+  display: flex;
+  gap: 4px;
+}
+.surface-layer-order .button {
+  font-size: 9px;
+  padding: 6px;
+}
+.surface-preview-heading .surface-paint-mode {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #e6c9d9;
+  margin-top: 4px;
+  font-size: 10px;
+}
+.surface-preview-heading p {
+  font-size: 9px;
+  color: #b28da2;
+  line-height: 1.5;
+  margin: 0;
+}
+@media (max-width: 1150px) {
+  .surface-body {
+    grid-template-columns: minmax(270px, 1.2fr) minmax(210px, 0.8fr) 220px;
+  }
+  .surface-toolbar label {
+    font-size: 9px;
+  }
+  .surface-dialog > footer p {
+    font-size: 9px;
+  }
+  .surface-dialog > footer .button {
+    font-size: 10px;
+  }
+  .surface-overlay {
+    padding: 8px;
+  }
+  .surface-dialog > header {
+    padding: 14px 18px;
+  }
+  .surface-toolbar input[type='range'] {
+    width: 58px;
+  }
+}
+@media (max-width: 900px) {
+  .surface-body {
+    grid-template-columns: minmax(250px, 1.1fr) minmax(180px, 0.8fr) 195px;
+  }
+  .surface-layer-controls > label {
+    font-size: 9px;
+  }
+  .surface-layer-controls > label input:not([type]) {
+    width: 110px;
+  }
+  .surface-canvas-options label:last-of-type {
+    font-size: 0;
+  }
+  .surface-dialog > footer p {
+    max-width: 250px;
+  }
+  .surface-preview-heading {
+    padding: 10px;
+  }
+  .surface-toolbar {
+    padding: 7px;
+  }
+  .surface-dialog h1 {
+    font-size: 20px;
+  }
+}

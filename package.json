@@ -1,6 +1,6 @@
 {
   "name": "jara-studio",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Local 3D and resource workspace for FiveM creators",
   "author": "Jaramiyo",
   "license": "MIT",
@@ -66,6 +66,12 @@
       "createDesktopShortcut": true,
       "createStartMenuShortcut": true,
       "deleteAppDataOnUninstall": false,
+      "installerLanguages": [
+        "es_ES",
+        "en_US"
+      ],
+      "displayLanguageSelector": true,
+      "include": "build/installer.nsh",
       "artifactName": "Jara-Studio-${version}-Setup-${arch}.${ext}"
     },
     "portable": {

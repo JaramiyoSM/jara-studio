@@ -1,8 +1,8 @@
 # Release verification
 
-Windows x64 release 0.1.0 is built from this repository using the pinned lockfile. Local validation covers archive integrity, resource preservation, renderer workflows and the native Electron file broker. Release binaries and SHA-256 checksums are published separately in GitHub Releases.
+Windows x64 release 0.2.0 is built from this repository using the pinned lockfile. Local validation covers archive integrity, resource preservation, renderer workflows and the native Electron file broker. Release binaries and SHA-256 checksums are published separately in GitHub Releases.
 
-The final suite passed **41 tests, zero failures, zero skips**, including the native host test. The per-user NSIS installer exited successfully, and the installed application opened the textured clothing sample, displayed its UV inspector and exported a 2048×2048 map PNG with no renderer errors. Product metadata identifies Jara Studio 0.1.0 and Jaramiyo. The portable launcher is verified independently.
+The final suite passed **58 tests, zero failures, zero skips**, including the native host test. The per-user NSIS installer exited successfully and wrote its selected language for first launch. The installed application opened the textured clothing sample, composed a text layer in the Surface workshop, exported a 1024×1024 texture PNG and a 2048×2048 map PNG, changed ES/EN without losing the scene and inspected an actual YTD dictionary with no renderer errors. Product metadata identifies Jara Studio 0.2.0 and Jaramiyo. The portable launcher was run independently and opened the vehicle sample.
 
 ## Checks
 
@@ -13,6 +13,9 @@ The final suite passed **41 tests, zero failures, zero skips**, including the na
 - Native file dialogs exercised against temporary local paths; saved `.jara`, GLB and recovery data reopened and checked.
 - Native renderer has no Node.js access; context isolation, sandbox, external-link restrictions and remote-request blocking are checked.
 - Canceling the native unsaved-work close prompt preserves the open scene.
+- Surface brush and eraser pixel changes, undo, resolution resampling, 3D raycast UV placement, image originals, clean PNG export and embedded GLB/.jara texture roundtrips.
+- Resource preset requirements, target dictionary and dependencies, exact native-byte preservation, real YTD entries and blocked export after failed dictionary inspection.
+- Installer language configuration, first-run preference order, native translated menus/dialogs and saved locale switching while retaining scene objects.
 
 Run `npm test` for unit/browser checks, or on Windows set `JARA_NATIVE_TESTS=1` before running it to include the native host test. The runner starts its own built-app preview. CI uses the downloaded Playwright Chromium browser; local tests use installed Microsoft Edge by default.
 

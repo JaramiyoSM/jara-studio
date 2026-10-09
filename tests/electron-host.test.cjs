@@ -59,7 +59,7 @@ test(
         require: 'undefined',
         process: 'undefined',
         desktop: true,
-        version: '0.1.0',
+        version: require('../package.json').version,
         missing: 404,
         traversal: 404,
       });
@@ -73,6 +73,32 @@ test(
         };
       });
       assert.deepEqual(preferences, { sandbox: true, isolated: true, node: false, security: true });
+      assert.equal(await page.evaluate(() => window.jaraDesktop.setLocale('en')), 'en');
+      assert.equal(
+        await application.evaluate(({ Menu }) => Menu.getApplicationMenu().items[0].label),
+        'File',
+      );
+      assert.equal(
+        JSON.parse(await fs.readFile(path.join(directory, 'preferences.json'), 'utf8')).locale,
+        'en',
+      );
+      assert.equal(await page.evaluate(() => window.jaraDesktop.setLocale('es')), 'es');
+      assert.equal(
+        await application.evaluate(({ Menu }) => Menu.getApplicationMenu().items[0].label),
+        'Archivo',
+      );
+      assert.equal(await page.evaluate(() => window.jaraDesktop.getLocale()), 'es');
+      assert.equal(
+        await page.evaluate(async () => {
+          try {
+            await window.jaraDesktop.setLocale('../../../elsewhere');
+            return false;
+          } catch {
+            return true;
+          }
+        }),
+        true,
+      );
       assert.equal(
         await page.evaluate(async () => {
           try {
@@ -105,6 +131,12 @@ test(
         .getByRole('button', { name: /Importar GLB|Import GLB/ })
         .click();
       await page.locator('.tree-group').first().waitFor();
+      await page.getByLabel(/Idioma del programa|Application language/).selectOption('en');
+      await page.waitForFunction(() => document.documentElement.lang === 'en');
+      assert.equal(await page.locator('.tree-group').count(), 1);
+      await page.getByLabel('Application language').selectOption('es');
+      await page.waitForFunction(() => document.documentElement.lang === 'es');
+      assert.equal(await page.locator('.tree-group').count(), 1);
       await page.getByLabel(/Nombre del proyecto|Project name/).fill('Native wardrobe');
       const projectPath = path.join(directory, 'Native wardrobe.jara');
       await application.evaluate(

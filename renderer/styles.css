@@ -1,6 +1,27 @@
 @import url('./components/toolbox.css');
+@font-face {
+  font-family: Karla;
+  src: url('/fonts/karla.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 200 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Baloo 2';
+  src: url('/fonts/baloo-2.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'JetBrains Mono';
+  src: url('/fonts/jetbrains-mono.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+}
 :root {
-  font-family: Inter, 'Segoe UI', Arial, sans-serif;
+  font-family: Karla, 'Segoe UI', Arial, sans-serif;
   color: #e8dde3;
   background: #171216;
   font-synthesis: none;
@@ -14,6 +35,17 @@
   --pink-soft: #b8869e;
   --text: #e8dde3;
   --good: #a8c4ac;
+}
+.brand > div,
+.viewport-welcome h1,
+.surface-dialog h1 {
+  font-family: 'Baloo 2', Karla, sans-serif;
+}
+.app-language {
+  padding: 5px 7px;
+  font-size: 10px;
+  color: #e5c7d9;
+  max-width: 100px;
 }
 * {
   box-sizing: border-box;

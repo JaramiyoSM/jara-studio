@@ -25,6 +25,28 @@ let mainWindow,
   closeConfirmed = false,
   closeDialog = false;
 const unsavedModules = new Set();
+const { preferredLocale } = require('./language.cjs');
+let appLocale = 'en';
+const text = (es, en) => (appLocale === 'es' ? es : en);
+const preferencesPath = () => path.join(app.getPath('userData'), 'preferences.json');
+async function readLocaleFile(filename) {
+  try {
+    const stat = await fs.stat(filename);
+    if (!stat.isFile() || stat.size > 4096) return null;
+    return JSON.parse(await fs.readFile(filename, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+async function changeLocale(locale) {
+  if (!['es', 'en'].includes(locale)) throw Error('Unsupported language.');
+  await fs.mkdir(path.dirname(preferencesPath()), { recursive: true });
+  await atomicWrite(preferencesPath(), Buffer.from(JSON.stringify({ locale })));
+  appLocale = locale;
+  Menu.setApplicationMenu(menu());
+  mainWindow?.webContents.send('jara:locale-changed', locale);
+  return locale;
+}
 const recoveryPath = () => path.join(app.getPath('userData'), 'recovery.jara');
 function trusted(event) {
   if (
@@ -65,7 +87,7 @@ async function save(options, project = false) {
   const bytes = checkedBytes(options?.bytes, project ? MAX_TOTAL : MAX_EXPORT);
   if (project && !isArchive(bytes)) throw Error('Invalid Jara project archive.');
   const result = await dialog.showSaveDialog(mainWindow, {
-    title: project ? 'Guardar proyecto · Save project' : 'Exportar · Export',
+    title: project ? text('Guardar proyecto', 'Save project') : text('Exportar', 'Export'),
     defaultPath: safeName(options?.name, project ? 'Untitled.jara' : 'jara-export.bin'),
     ...(project ? { filters: [{ name: 'Jara Studio project', extensions: ['jara'] }] } : {}),
   });
@@ -75,6 +97,8 @@ async function save(options, project = false) {
 }
 function registerIPC() {
   handle('jara:version', () => app.getVersion());
+  handle('jara:locale', () => appLocale);
+  handle('jara:set-locale', changeLocale);
   handle('jara:set-unsaved', (module, dirty) => {
     if (
       !['scene', 'handling', 'textures', 'map', 'resources'].includes(module) ||
@@ -87,9 +111,9 @@ function registerIPC() {
   handle('jara:open-files', async (options) => {
     const extensions = kinds[options?.kind] || kinds.any,
       result = await dialog.showOpenDialog(mainWindow, {
-        title: 'Importar archivos · Import files',
+        title: text('Importar archivos', 'Import files'),
         properties: ['openFile', 'multiSelections'],
-        filters: [{ name: 'Archivos de creación · Creator files', extensions }],
+        filters: [{ name: text('Archivos de creación', 'Creator files'), extensions }],
       });
     if (result.canceled) return [];
     if (result.filePaths.length > 128) throw Error('Select at most 128 files.');
@@ -107,7 +131,7 @@ function registerIPC() {
   handle('jara:save-project', (options) => save(options, true));
   handle('jara:open-project', async () => {
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: 'Abrir proyecto · Open project',
+      title: text('Abrir proyecto', 'Open project'),
       properties: ['openFile'],
       filters: [{ name: 'Jara Studio project', extensions: ['jara'] }],
     });
@@ -150,56 +174,78 @@ function menu() {
   const command = (name) => mainWindow?.webContents.send('jara:command', name);
   return Menu.buildFromTemplate([
     {
-      label: 'Archivo / File',
+      label: text('Archivo', 'File'),
       submenu: [
-        { label: 'Importar / Import', accelerator: 'CmdOrCtrl+I', click: () => command('import') },
         {
-          label: 'Abrir proyecto / Open project',
+          label: text('Importar', 'Import'),
+          accelerator: 'CmdOrCtrl+I',
+          click: () => command('import'),
+        },
+        {
+          label: text('Abrir proyecto', 'Open project'),
           accelerator: 'CmdOrCtrl+O',
           click: () => command('open'),
         },
         {
-          label: 'Guardar proyecto / Save project',
+          label: text('Guardar proyecto', 'Save project'),
           accelerator: 'CmdOrCtrl+S',
           click: () => command('save'),
         },
         { type: 'separator' },
         {
-          label: 'Exportar GLB / Export GLB',
+          label: text('Exportar GLB', 'Export GLB'),
           accelerator: 'CmdOrCtrl+Shift+E',
           click: () => command('export'),
         },
         { type: 'separator' },
-        { role: 'quit', label: 'Salir / Quit' },
+        { role: 'quit', label: text('Salir', 'Quit') },
       ],
     },
     {
-      label: 'Vista / View',
+      label: text('Vista', 'View'),
       submenu: [
-        { role: 'togglefullscreen', label: 'Pantalla completa / Fullscreen' },
-        { role: 'resetZoom', label: 'Escala de interfaz / Reset UI zoom' },
-        { role: 'zoomIn', label: 'Aumentar interfaz / Zoom UI in' },
-        { role: 'zoomOut', label: 'Reducir interfaz / Zoom UI out' },
+        { role: 'togglefullscreen', label: text('Pantalla completa', 'Fullscreen') },
+        { role: 'resetZoom', label: text('Restablecer escala de interfaz', 'Reset UI zoom') },
+        { role: 'zoomIn', label: text('Aumentar interfaz', 'Zoom UI in') },
+        { role: 'zoomOut', label: text('Reducir interfaz', 'Zoom UI out') },
+        { type: 'separator' },
+        {
+          label: text('Idioma', 'Language'),
+          submenu: ['es', 'en'].map((locale) => ({
+            label: locale === 'es' ? 'Español' : 'English',
+            type: 'radio',
+            checked: appLocale === locale,
+            click: () =>
+              changeLocale(locale).catch(() =>
+                dialog.showMessageBox(mainWindow, {
+                  type: 'error',
+                  message: text('No se pudo guardar el idioma.', 'Could not save the language.'),
+                }),
+              ),
+          })),
+        },
       ],
     },
     {
-      label: 'Ayuda / Help',
+      label: text('Ayuda', 'Help'),
       submenu: [
-        { label: 'Guía / Guide', click: () => command('help') },
+        { label: text('Guía', 'Guide'), click: () => command('help') },
         { label: 'Jaramiyo', click: () => shell.openExternal('https://jaramiyo.com/') },
         {
-          label: 'Código / Source',
+          label: text('Código', 'Source'),
           click: () => shell.openExternal('https://github.com/JaramiyoSM/jara-studio'),
         },
         {
-          label: 'Acerca de / About',
+          label: text('Acerca de', 'About'),
           click: () =>
             dialog.showMessageBox(mainWindow, {
               type: 'info',
               title: 'Jara Studio',
               message: `Jara Studio ${app.getVersion()}`,
-              detail:
-                'Jaramiyo · Herramientas locales para creadores FiveM.\nProyectos y exportaciones permanecen en tu equipo.\nModels require compatible GTA preparation before in-game use.',
+              detail: text(
+                'Jaramiyo · Herramientas locales para creadores FiveM.\nProyectos y exportaciones permanecen en tu equipo.\nLos modelos requieren preparación GTA compatible antes de usarlos en el juego.',
+                'Jaramiyo · Local tools for FiveM creators.\nProjects and exports remain on your device.\nModels require compatible GTA preparation before in-game use.',
+              ),
             }),
         },
       ],
@@ -207,6 +253,11 @@ function menu() {
   ]);
 }
 app.whenReady().then(async () => {
+  appLocale = preferredLocale(
+    await readLocaleFile(preferencesPath()),
+    await readLocaleFile(path.join(path.dirname(process.execPath), 'install-language.json')),
+    app.getLocale(),
+  );
   const root = path.join(app.getAppPath(), 'dist');
   protocol.handle('jara', async (request) => {
     try {
@@ -256,12 +307,16 @@ app.whenReady().then(async () => {
     try {
       const result = await dialog.showMessageBox(mainWindow, {
         type: 'question',
-        title: 'Cambios sin guardar · Unsaved work',
-        message:
-          'Hay trabajo sin guardar o mesas abiertas. / There is unsaved work or open utility data.',
-        detail:
-          'Vuelve al estudio para guardar tu proyecto y exportar las utilidades. La recuperación puede no contener los últimos cambios. / Return to save your project and export utilities. Recovery may not contain recent changes.',
-        buttons: ['Volver / Go back', 'Descartar y salir / Discard and quit'],
+        title: text('Cambios sin guardar', 'Unsaved work'),
+        message: text(
+          'Hay trabajo sin guardar o mesas abiertas.',
+          'There is unsaved work or open utility data.',
+        ),
+        detail: text(
+          'Vuelve al estudio para guardar tu proyecto y exportar las utilidades. La recuperación puede no contener los últimos cambios.',
+          'Return to save your project and export utilities. Recovery may not contain recent changes.',
+        ),
+        buttons: [text('Volver', 'Go back'), text('Descartar y salir', 'Discard and quit')],
         defaultId: 0,
         cancelId: 0,
         noLink: true,

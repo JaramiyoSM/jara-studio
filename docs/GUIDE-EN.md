@@ -2,11 +2,11 @@
 
 ## Install and start
 
-Download the Windows x64 installer or portable build from [official Releases](https://github.com/JaramiyoSM/jara-studio/releases). The installer lets you choose a folder and creates shortcuts. No Jara-tools account is required; model processing stays on your computer.
+Download the Windows x64 installer or portable build from [official Releases](https://github.com/JaramiyoSM/jara-studio/releases). Choose **Español** or **English** when the installer opens, then choose the folder and follow the shortcut installation steps. No Jara-tools account is required; model processing stays on your computer.
 
 The first release is unsigned. Windows may report an unknown publisher. Review the source, release origin and published SHA-256 before deciding to run it. Disabling Windows protection is not required.
 
-Use Windows x64 with updated graphics drivers and WebGL2 support. Import limits are 128 files, 128 MiB per file and 256 MiB total; large scenes can still exceed GPU memory. The interface follows the first supported Spanish or English language in your system preferences. F1 opens the quick workflow guide.
+Use Windows x64 with updated graphics drivers and WebGL2 support. Import limits are 128 files, 128 MiB per file and 256 MiB total; large scenes can still exceed GPU memory. A new installation uses the language selected in the installer; an existing saved preference takes priority. Portable builds initially follow the first supported Spanish or English system language. Change it in the toolbar selector or **View → Language**; the choice persists for the next launch. F1 opens the quick workflow guide.
 
 ## Build your first scene
 
@@ -29,9 +29,17 @@ The 3D loader caps individual models/dependencies at 96 MiB and models at five m
 
 ## Materials, UVs and clothing
 
-Select the mesh and material slot before editing color, roughness, metalness or opacity. Color texture assigns an image to that slot. Open UV map to inspect coordinates over the texture and export a PNG template. Paint it in your image editor and import the result.
+Select the mesh and material slot before editing color, roughness, metalness or opacity. Color texture assigns an image to that slot. Open UV map to inspect coordinates and export a PNG template. **Design clothing / livery** opens the Surface workshop with real mesh UVs, a live 3D design preview and paint, text, color and image layers. Applying isolates the selected mesh material so other objects and slots retain their appearance.
 
-The application does not replace garment modeling, sewing tools or a brush-based texture painter. Clothing samples have real meshes and UVs but still need native GTA preparation. A DDS image alone does not create a clothing YDD. Check component, variation and texture names in Blender/Sollumz.
+1. Select the garment or bodywork, mesh and material slot containing the color texture. Existing UV coordinates are required; the workshop does not automatically unwrap meshes.
+2. Paint in the selected paint layer with your chosen color, size and opacity. Eraser removes only that layer's paint, revealing the original texture underneath.
+3. Add text or import a PNG, JPG or WebP layer. Move drags a text/image layer on the canvas. Fine-tune position, dimensions, rotation and opacity in the panel. Enable **Paint / place in 3D** to paint directly on the surface or place a text/image layer by clicking the model. Only the selected mesh and material slot respond. Turn this mode off to orbit again. Hide, reorder or delete layers to compare versions and use Undo design / Redo design to recover changes.
+4. The UV guide respects texture orientation and transforms and filters the selected material slot. Shared, mirrored or repeated islands receive the same design: unique livery panels require unique UVs from your modeler. Untinted material colors previews without multiplying by the original material color.
+5. Export texture PNG saves only the pixels, without UV or selection lines. Apply to model combines the layers into a color texture. Save `.jara` or export GLB to embed it; OBJ does not contain textures. Layer history belongs to the current workshop session: reopening edits the flattened final texture.
+
+Editing uses 512, 1024 or 2048 px based on the input texture. Resolution resamples the design and resets workshop history, confirming when changes exist. Designs support up to 16 layers; paint/image layers have memory limits and history evicts older states to respect a pixel memory budget. Images used in the final design are kept as originals when applying. Close without applying discards the draft without changing the scene material. The workshop edits color textures; normal maps, sewing, topology and rigging require a dedicated modeler.
+
+Clothing samples have real meshes and UVs but still need native GTA preparation. A DDS image alone does not create a clothing YDD. Check component, variation and texture names in Blender/Sollumz.
 
 ## Skeletons and animation
 

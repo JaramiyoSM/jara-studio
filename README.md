@@ -11,11 +11,17 @@ A local workspace by **Jaramiyo** for preparing 3D models and FiveM resources. W
 - Import GLB, glTF, OBJ with MTL, FBX and STL into a scene with multiple objects.
 - Select objects, move/rotate/scale with gizmos, snap, duplicate, hide, lock and undo edits.
 - Inspect meshes, UVs, material slots and skeletons; assign textures and play imported animation clips.
+- Paint on UVs or directly on the selected 3D surface, compose text/image/color layers and export a clean texture PNG.
 - Save `.jara` projects with embedded scene data and original imports; restore local recovery saves.
 - Export GLB, geometry/UV OBJ, viewport PNG and placement JSON.
 - Prepare vehicle handling, inspect textures, validate resource files and edit minimap overlays in the utilities workspace.
+- Check native resource files with nine presets for vehicles, liveries, clothing, props, peds, weapons and maps; inspect actual YTD entries and export a validation report.
 
 ![Map Studio: editable zones and local export tools](docs/images/desktop-toolbox.webp)
+
+![Surface workshop: clothing design with real UVs, layers and a live 3D preview](docs/images/desktop-surface.webp)
+
+![Resource Pack: target dictionary, real YTD entries and dependency checks](docs/images/desktop-resource.webp)
 
 Includes attributed CC0 examples of a rigged human, clothing, a vehicle, a prop and a stylized weapon. These are working-format examples, not native GTA assets.
 
@@ -27,7 +33,7 @@ Processing is local. No account, analytics, file upload or cloud service is requ
 
 ## Install
 
-Download `Jara-Studio-0.1.0-Setup-x64.exe` for a per-user installation, or `Jara-Studio-0.1.0-Portable-x64.exe` to run without installation. Windows x64 is the packaged target. Compare the file with `SHA256SUMS.txt` in the same release.
+Download `Jara-Studio-0.2.0-Setup-x64.exe` for a per-user installation, or `Jara-Studio-0.2.0-Portable-x64.exe` to run without installation. Choose Español or English when the installer starts. The installed application adopts that choice on first use; existing preferences take priority. Change it later in View → Language or the application language selector. Portable builds use the preferred supported system language initially. Windows x64 is the packaged target. Compare the file with `SHA256SUMS.txt` in the same release.
 
 The first release is **unsigned**: Windows can display an unknown-publisher warning. No publisher verification or code-signing certificate is claimed. Review the release, checksum and source before choosing to run it. Projects are saved where you choose; uninstalling does not delete them.
 
@@ -59,7 +65,7 @@ Import selections are limited to 128 files, 128 MiB per file and 256 MiB total. 
 
 The scene loader applies a stricter 96 MiB model/dependency limit and five-million-vertex model limit. `.jara` projects cover the 3D scene; utility workspaces use their own separate exports.
 
-The original-file pool is capped at 128 MiB/500 files, and the scene at 500 objects/ten million vertices. Closing warns about pending changes or open utility data. See [verification notes](docs/VERIFICATION.md) for test coverage and runtime limits. Release validation passed 41 tests; the installer and portable launcher are also exercised as actual Windows applications.
+The original-file pool is capped at 128 MiB/500 files, and the scene at 500 objects/ten million vertices. Closing warns about pending changes or open utility data. Surface designs support up to 16 layers and 2048 px; applying flattens them into the saved texture, so keep separate design exports when needed. See [verification notes](docs/VERIFICATION.md) for test coverage and runtime limits. Release validation passed 58 tests; the installer and portable launcher are also exercised as actual Windows applications.
 
 ## License and credits
 

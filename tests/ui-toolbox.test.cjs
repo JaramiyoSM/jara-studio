@@ -296,3 +296,91 @@ test('Native resource workflow validates files and generates only matching manif
     await browser.close();
   }
 });
+
+test('Livery workflow requires the target dictionary, checks real entries and exports dependencies with exact original bytes', async () => {
+  const { browser, page, errors } = await start('en-US');
+  try {
+    const codec = await import('../renderer/lib/texture-codec.js');
+    const rgba = new Uint8Array(16 * 16 * 4).fill(240);
+    const blob = await codec.buildYtdFromDDS([
+      { name: 'jara_sign_1', dds: codec.encodeDDS(rgba, 16, 16, { format: 'BC3' }) },
+    ]);
+    const data = Buffer.from(await blob.arrayBuffer());
+    await page.getByRole('tab', { name: /Resources/ }).click();
+    await page.getByRole('button', { name: 'Vehicle livery / texture', exact: true }).click();
+    await queue(page, [{ name: 'jara_car.ytd', data: Array.from(data) }]);
+    await page.getByRole('button', { name: 'Add files', exact: true }).click();
+    await page.getByText('Missing files', { exact: true }).waitFor();
+    await page
+      .getByRole('checkbox', {
+        name: 'I have reviewed file dependencies and permissions.',
+        exact: true,
+      })
+      .check();
+    assert.equal(
+      await page.getByRole('button', { name: 'Create resource ZIP', exact: true }).isEnabled(),
+      false,
+    );
+    await page.getByLabel('Target dictionary (without .ytd)', { exact: true }).fill('jara_car');
+    await page.getByRole('button', { name: 'Check YTD', exact: true }).click();
+    await page.getByText('1 textures', { exact: false }).waitFor();
+    await page.locator('.rp-dictionaries details summary').click();
+    await page.getByText('jara_sign_1', { exact: true }).waitFor();
+    await page.getByText('Dependencies and build', { exact: true }).click();
+    await page.getByLabel('External resources', { exact: true }).fill('jara_vehicle');
+    await page.getByLabel('Minimum build (optional)', { exact: true }).fill('3095');
+    await page.getByRole('button', { name: 'Save report', exact: true }).click();
+    const report = JSON.parse((await saved(page, 'jara_resource-validation.json')).toString());
+    assert.equal(report.dictionaries[0].textures[0].name, 'jara_sign_1');
+    assert.equal(report.runtimeTested, false);
+    await page
+      .getByRole('checkbox', {
+        name: 'I have reviewed file dependencies and permissions.',
+        exact: true,
+      })
+      .check();
+    await page.getByRole('button', { name: 'Create resource ZIP', exact: true }).click();
+    const zip = await JSZip.loadAsync(await saved(page, 'jara_resource.zip'));
+    assert.deepEqual(await zip.file('jara_resource/stream/jara_car.ytd').async('nodebuffer'), data);
+    assert.match(await zip.file('jara_resource/fxmanifest.lua').async('string'), /jara_vehicle/);
+    assert.match(await zip.file('jara_resource/fxmanifest.lua').async('string'), /gameBuild:3095/);
+    await page.screenshot({ path: 'artifacts/toolbox-resource-livery.png' });
+    assert.deepEqual(errors, []);
+  } finally {
+    await browser.close();
+  }
+});
+
+test('Failed internal YTD inspection blocks export while retaining local files and report access in Spanish', async () => {
+  const { browser, page, errors } = await start();
+  try {
+    await page.getByRole('tab', { name: /Recursos/ }).click();
+    const data = Buffer.alloc(32);
+    data.write('RSC7');
+    data.writeUInt32LE(13, 4);
+    await queue(page, [{ name: 'bad.ytd', data: Array.from(data) }]);
+    await page.getByRole('button', { name: 'Añadir archivos', exact: true }).click();
+    await page.getByRole('button', { name: 'Comprobar YTD', exact: true }).click();
+    await page.getByText('Diccionario inválido', { exact: true }).waitFor();
+    await page
+      .getByRole('checkbox', {
+        name: 'He revisado las dependencias y los permisos de estos archivos.',
+        exact: true,
+      })
+      .check();
+    assert.equal(
+      await page.getByRole('button', { name: 'Crear recurso ZIP', exact: true }).isEnabled(),
+      false,
+    );
+    await page.getByRole('button', { name: 'Guardar informe', exact: true }).click();
+    const report = JSON.parse((await saved(page, 'jara_resource-validation.json')).toString());
+    assert.ok(report.dictionaries[0].error);
+    await page.getByRole('tab', { name: /Handling/ }).click();
+    await page.getByRole('tab', { name: /Recursos/ }).click();
+    assert.equal(await page.getByText('stream/bad.ytd', { exact: true }).count(), 1);
+    assert.equal(await page.getByText('Diccionario inválido', { exact: true }).count(), 1);
+    assert.deepEqual(errors, []);
+  } finally {
+    await browser.close();
+  }
+});

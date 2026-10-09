@@ -2,13 +2,13 @@
 
 ## 1. Instalar y empezar
 
-Descarga el instalador x64 o la versión portátil de la [publicación oficial](https://github.com/JaramiyoSM/jara-studio/releases). El instalador permite elegir carpeta y crea accesos directos; no requiere una cuenta de Jara-tools. La aplicación funciona con archivos locales y no sube tus creaciones.
+Descarga el instalador x64 o la versión portátil de la [publicación oficial](https://github.com/JaramiyoSM/jara-studio/releases). Al iniciar el instalador elige **Español** o **English**. Después elige la carpeta y sigue los pasos para crear los accesos directos. No requiere una cuenta de Jara-tools. La aplicación funciona con archivos locales y no sube tus creaciones.
 
 Esta primera versión no tiene firma de editor. Windows puede mostrar una advertencia de editor desconocido. Comprueba el origen de la descarga y su SHA-256 publicado antes de decidir si ejecutarla. No se necesita desactivar la protección de Windows.
 
 Usa un equipo Windows x64 con un controlador gráfico actualizado y soporte WebGL2. Las escenas grandes necesitan memoria RAM y memoria gráfica suficiente. La aplicación limita cada importación a 128 archivos, 128 MiB por archivo y 256 MiB en total; eso no garantiza que tu GPU pueda mostrar una escena de ese tamaño.
 
-La interfaz elige español o inglés a partir del orden de idiomas del sistema. Puedes ampliar la interfaz desde el menú Vista. Abre la guía rápida con F1.
+En una instalación nueva la interfaz usa el idioma elegido durante la instalación. Una preferencia guardada anteriormente tiene prioridad. La versión portátil elige español o inglés a partir del orden de idiomas del sistema. Cambia el idioma con el selector de la barra superior o **Vista → Idioma**; se recuerda para el próximo inicio. Puedes ampliar la interfaz desde el menú Vista. Abre la guía rápida con F1.
 
 ## 2. Tu primera escena
 
@@ -35,7 +35,17 @@ Cada importación crea un objeto en la escena. Puedes combinar varios modelos y 
 
 Selecciona una malla y, si tiene varios materiales, elige la ranura correcta. Cambia color, rugosidad, metal y opacidad desde el inspector. Con Textura de color asignas una imagen a ese material.
 
-Abre Mapa UV para ver las coordenadas sobre la textura y exportar una plantilla PNG. Puedes pintar esa plantilla en tu editor de imágenes y volver a importar el resultado. El visor no sustituye un editor de costura, pintura por pincel ni un modelador de prendas. La malla de ejemplo tiene UV y materiales reales, pero necesita preparación específica para usarse como ropa nativa en GTA.
+Abre Mapa UV para inspeccionar las coordenadas y exportar una plantilla PNG. Con **Diseñar ropa / livery** se abre el Taller de superficies: una textura 2D con sus UV reales, una vista 3D que responde al diseño y capas de pintura, texto, color e imágenes. El material de la malla seleccionada se aísla al aplicar para conservar otros objetos y ranuras.
+
+1. Selecciona la prenda o carrocería, su malla y la ranura de material que contiene la textura de color. Necesitas coordenadas UV existentes; el taller no hace un desplegado automático.
+2. Usa Pincel para pintar en la capa seleccionada. Elige color, tamaño y opacidad. Borrador quita solo pintura de esa capa y permite volver a ver la textura original.
+3. Añade texto o importa PNG, JPG o WebP como una capa. Con Mover arrastra la capa sobre el lienzo; afina posición, ancho, alto, rotación y opacidad en el panel. Activa **Pintar / colocar en 3D** para pintar directamente en la superficie o colocar una capa de texto/imagen al hacer clic en el modelo. Solo responde la malla y ranura seleccionada. Desactiva ese modo para volver a orbitar. Oculta, reordena o elimina capas para comparar versiones. Deshacer diseño y Rehacer diseño recuperan cambios del taller.
+4. La guía UV respeta la orientación y transformación de la textura y filtra la ranura de material. Las islas UV compartidas, espejadas o repetidas reciben el mismo diseño: para una livery única por cara necesitas UV únicas desde tu modelador. Colores sin tinte del material permite revisar el resultado sin multiplicarlo por el color del material.
+5. Exportar textura PNG guarda solo los píxeles, sin guía UV ni selección. Aplicar al modelo combina las capas en una textura de color. Guarda `.jara` o exporta GLB para conservar esa imagen integrada; OBJ no incorpora texturas. El historial de capas es de esta sesión del taller: al volver a abrir, editas la textura final aplanada.
+
+La edición usa 512, 1024 o 2048 px según la textura de entrada. Puedes cambiar Resolución; remuestrea la imagen y reinicia el historial del taller, con confirmación si hay cambios. Se admiten hasta 16 capas; las capas de pintura y las imágenes tienen límites de memoria, y el historial reduce sus estados para mantener su presupuesto. Los archivos de imágenes utilizadas se conservan como originales al aplicar. Cerrar sin aplicar descarta el diseño; no cambia el material de la escena. El taller es para texturas de color: mapas normales, costura, topología y rigging se trabajan en un modelador dedicado.
+
+La malla de ropa de ejemplo tiene UV y materiales reales, pero necesita preparación específica para usarse como ropa nativa en GTA.
 
 Para una prenda FiveM, conserva los archivos originales y revisa nombres de componente, variación y textura en Sollumz. Una imagen DDS por sí sola no crea una prenda ni un YDD.
 

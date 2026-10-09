@@ -1,5 +1,6 @@
+import { version } from '../../package.json';
 const host = () => window.jaraDesktop;
-export const runtimeVersion = host()?.isDesktop ? '0.1.0' : 'Browser preview';
+export const runtimeVersion = host()?.isDesktop ? version : 'Browser preview';
 export const isDesktop = () => Boolean(host()?.isDesktop);
 export async function openFiles({ kind = 'any' } = {}) {
   if (host()) return host().openFiles({ kind });

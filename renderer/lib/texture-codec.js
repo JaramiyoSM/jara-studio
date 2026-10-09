@@ -792,6 +792,26 @@ async function previewURL(rgba, width, height) {
   ctx.putImageData(new ImageData(new Uint8ClampedArray(pixels), next.width, next.height), 0, 0);
   return URL.createObjectURL(await imageBlob(canvas, 'image/png'));
 }
+export async function inspectTextureDictionary(file) {
+  if (!file?.arrayBuffer || !/\.ytd$/i.test(String(file.name || '')))
+    reject('Selecciona un diccionario YTD.');
+  if (file.size > LIMITS.file) reject('El archivo supera el límite de 128 MB.');
+  const bytes = await readBytes(file);
+  if (bytes.length > LIMITS.file) reject('El archivo supera el límite de 128 MB.');
+  const resource = openResource(bytes);
+  return {
+    resourceMemory: resource.systemSize + resource.graphicsSize,
+    textures: resource.entries.map((entry) => ({
+      name: entry.name,
+      hash: entry.hash,
+      width: entry.width,
+      height: entry.height,
+      levels: entry.levels,
+      codec: entry.codec,
+      encodedBytes: entry.encoded?.byteLength || 0,
+    })),
+  };
+}
 export async function inspectTextureFile(file) {
   if (!file?.arrayBuffer) reject('Selecciona un archivo de textura.');
   if (file.size > LIMITS.file) reject('El archivo supera el límite de 128 MB.');

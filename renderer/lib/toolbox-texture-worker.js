@@ -2,6 +2,7 @@ import * as codec from './texture-codec.js';
 import { mipDDS } from './toolbox-textures.js';
 const METHODS = new Set([
   'inspectTextureFile',
+  'inspectTextureDictionary',
   'optimizeTexture',
   'createYtd',
   'exportTexturePack',

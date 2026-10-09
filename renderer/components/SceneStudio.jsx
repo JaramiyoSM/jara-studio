@@ -59,7 +59,6 @@ import {
   exportOBJ,
   parseProjectScene,
   meshDetails,
-  uvPaths,
   disposeObject,
   newId,
   validateSceneAddition,
@@ -74,6 +73,8 @@ import {
   validateTransform,
   validateOriginalSources,
 } from '../lib/scene-project.js';
+import SurfaceDesigner from './SurfaceDesigner.jsx';
+import { materialWithSurface, replaceMeshMaterial, surfaceUVPaths } from '../lib/surface-design.js';
 
 const text = {
   es: {
@@ -137,6 +138,9 @@ const text = {
     undo: 'Deshacer',
     redo: 'Rehacer',
     textureLoaded: 'Textura aplicada al material seleccionado.',
+    surface: 'Diseñar ropa / livery',
+    surfaceApplied: 'Diseño aplicado. Guarda el proyecto para conservar la textura editada.',
+    surfaceNoUV: 'Importa un modelo con UV para diseñar su textura.',
     uvDownload: 'Exportar UV PNG',
     offline: 'LOCAL · PRIVADO',
     ready: 'Listo',
@@ -233,6 +237,9 @@ const text = {
     undo: 'Undo',
     redo: 'Redo',
     textureLoaded: 'Texture applied to the selected material.',
+    surface: 'Design clothing / livery',
+    surfaceApplied: 'Design applied. Save your project to keep the edited texture.',
+    surfaceNoUV: 'Import a model with UVs to design its texture.',
     uvDownload: 'Export UV PNG',
     offline: 'LOCAL · PRIVATE',
     ready: 'Ready',
@@ -284,7 +291,7 @@ const primitiveNames = {
   plane: ['Plano', 'Plane'],
 };
 
-function UVPreview({ mesh, material, onExport, label, noUV }) {
+function UVPreview({ mesh, material, materialIndex, onExport, label, noUV }) {
   const canvas = useRef(null);
   useEffect(() => {
     const node = canvas.current;
@@ -301,7 +308,7 @@ function UVPreview({ mesh, material, onExport, label, noUV }) {
     ctx.strokeStyle = 'rgba(60,29,48,.9)';
     ctx.lineWidth = 1.1;
     ctx.beginPath();
-    for (const points of uvPaths(mesh?.geometry, 320, material?.map?.channel || 0)) {
+    for (const points of surfaceUVPaths(mesh, material, materialIndex, 320)) {
       ctx.moveTo(...points[0]);
       ctx.lineTo(...points[1]);
       ctx.lineTo(...points[2]);
@@ -311,7 +318,7 @@ function UVPreview({ mesh, material, onExport, label, noUV }) {
     ctx.strokeStyle = 'rgba(248,182,213,.7)';
     ctx.lineWidth = 0.45;
     ctx.stroke();
-  }, [mesh, material, material?.map]);
+  }, [mesh, material, material?.map, materialIndex]);
   if (!mesh?.geometry.getAttribute(material?.map?.channel ? `uv${material.map.channel}` : 'uv'))
     return <p className="hint">{noUV}</p>;
   return (
@@ -404,7 +411,8 @@ const SceneStudio = forwardRef(function SceneStudio(
     [expanded, setExpanded] = useState({}),
     [showSamples, setShowSamples] = useState(true),
     [toast, setToast] = useState(''),
-    [webglError, setWebglError] = useState('');
+    [webglError, setWebglError] = useState(''),
+    [surface, setSurface] = useState(null);
   statusRef.current = onStatus;
   localeRef.current = t;
   modeRef.current = mode;
@@ -1006,6 +1014,25 @@ const SceneStudio = forwardRef(function SceneStudio(
       engine.current.sources.push(file);
       notify(t.textureLoaded);
     });
+  const applySurface = async ({ canvas, neutral, sources }) => {
+    if (!surface || busyRef.current) throw new Error(t.loading);
+    const { mesh, material, materialIndex: slot, object } = surface;
+    if (!engine.current.content.children.includes(object)) throw new Error(t.select);
+    validateOriginalSources(engine.current.sources, sources);
+    const next = materialWithSurface(
+      material,
+      canvas,
+      `${safeName(object.name)}-surface.png`,
+      neutral,
+    );
+    command(
+      () => replaceMeshMaterial(mesh, slot, next),
+      () => replaceMeshMaterial(mesh, slot, material),
+    );
+    engine.current.sources.push(...sources);
+    setSurface(null);
+    notify(t.surfaceApplied);
+  };
   const setCameraView = (value) => {
     const e = engine.current;
     setView(value);
@@ -1862,6 +1889,33 @@ const SceneStudio = forwardRef(function SceneStudio(
                   <ImagePlus size={14} />
                   {t.texture}
                 </button>
+                <button
+                  className="button primary wide"
+                  disabled={
+                    busy ||
+                    !activeMesh.geometry.getAttribute(
+                      activeMaterial.map?.channel ? `uv${activeMaterial.map.channel}` : 'uv',
+                    )
+                  }
+                  title={
+                    activeMesh.geometry.getAttribute(
+                      activeMaterial.map?.channel ? `uv${activeMaterial.map.channel}` : 'uv',
+                    )
+                      ? t.surface
+                      : t.surfaceNoUV
+                  }
+                  onClick={() =>
+                    setSurface({
+                      object: selected,
+                      mesh: activeMesh,
+                      material: activeMaterial,
+                      materialIndex: materials.indexOf(activeMaterial),
+                    })
+                  }
+                >
+                  <Layers size={14} />
+                  {t.surface}
+                </button>
                 {activeMaterial.map && (
                   <p className="hint">
                     {activeMaterial.map.name || 'Embedded texture'} ·{' '}
@@ -1878,6 +1932,7 @@ const SceneStudio = forwardRef(function SceneStudio(
               <UVPreview
                 mesh={activeMesh}
                 material={activeMaterial}
+                materialIndex={materials.indexOf(activeMaterial)}
                 noUV={t.noUV}
                 label={t.uvDownload}
                 onExport={(blob) =>
@@ -1941,6 +1996,14 @@ const SceneStudio = forwardRef(function SceneStudio(
           <Check size={15} />
           {toast}
         </div>
+      )}
+      {surface && (
+        <SurfaceDesigner
+          {...surface}
+          locale={locale}
+          onApply={applySurface}
+          onClose={() => setSurface(null)}
+        />
       )}
     </div>
   );

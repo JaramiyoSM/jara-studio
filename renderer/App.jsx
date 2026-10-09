@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 import SceneStudio from './components/SceneStudio.jsx';
 import { openExternal, runtimeVersion } from './lib/desktop.js';
+import { version as appVersion } from '../package.json';
 import './styles.css';
 const Toolbox = lazy(() => import('./components/Toolbox.jsx'));
 const labels = {
@@ -47,7 +48,7 @@ const labels = {
     guideSteps: [
       'Importa GLB, glTF, OBJ + MTL, FBX o STL. Incluye las imágenes referenciadas en la misma selección.',
       'Selecciona objetos en el árbol o directamente sobre la malla. Usa W, E y R para mover, rotar y escalar; F encuadra.',
-      'Inspecciona las mallas y sus materiales. Aplica texturas, consulta el mapa UV y reproduce clips de animación existentes.',
+      'Inspecciona mallas y materiales. En Diseñar ropa / livery pinta sobre las UV, añade texto o imágenes y aplica la textura con vista 3D. Reproduce clips de animación existentes.',
       'Guarda un proyecto .jara para conservar la escena, texturas y originales. El guardado de recuperación se realiza cada 45 segundos cuando hay cambios.',
       'Exporta GLB para continuar en Blender / Sollumz. OBJ contiene geometría y coordenadas UV; no incorpora materiales ni texturas.',
       'En Utilidades prepara handling.meta, texturas, manifiestos y postales. Revisa el recurso y pruébalo en tu servidor FiveM.',
@@ -83,7 +84,7 @@ const labels = {
     guideSteps: [
       'Import GLB, glTF, OBJ + MTL, FBX or STL. Include referenced images in the same file selection.',
       'Select objects in the tree or on a mesh. Use W, E and R to move, rotate and scale; F frames the selection.',
-      'Inspect meshes and their materials. Assign textures, review UV coordinates and play existing animation clips.',
+      'Inspect meshes and materials. Design clothing / livery paints on UVs, adds text and image layers, and applies textures with a 3D preview. Play existing animation clips.',
       'Save a .jara project to preserve the scene, textures and original files. Recovery saves run every 45 seconds when changes exist.',
       'Export GLB to continue in Blender / Sollumz. OBJ contains geometry and UV coordinates; materials and textures are not embedded.',
       'Use Utilities for handling.meta, textures, manifests and postals. Review the resource and test it on your FiveM server.',
@@ -106,7 +107,7 @@ const sections = [
 ];
 
 export default function App() {
-  const [locale] = useState(
+  const [locale, setLocale] = useState(
     () =>
       (navigator.languages || [navigator.language])
         .map((l) => l.toLowerCase().split('-')[0])
@@ -124,6 +125,36 @@ export default function App() {
   useEffect(() => {
     document.documentElement.lang = locale;
   }, [locale]);
+  useEffect(() => {
+    let active = true;
+    window.jaraDesktop
+      ?.getLocale?.()
+      .then((value) => {
+        if (active && ['es', 'en'].includes(value)) setLocale(value);
+      })
+      .catch(() => {});
+    const unsubscribe = window.jaraDesktop?.onLocale?.((value) => {
+      if (active && ['es', 'en'].includes(value)) setLocale(value);
+    });
+    return () => {
+      active = false;
+      unsubscribe?.();
+    };
+  }, []);
+  const changeLocale = async (value) => {
+    if (!['es', 'en'].includes(value)) return;
+    try {
+      const saved = await window.jaraDesktop?.setLocale?.(value);
+      setLocale(['es', 'en'].includes(saved) ? saved : value);
+    } catch {
+      setLocale(value);
+      setStatus(
+        value === 'es'
+          ? 'Idioma cambiado para esta sesión. No se pudo guardar la preferencia.'
+          : 'Language changed for this session. The preference could not be saved.',
+      );
+    }
+  };
   useEffect(() => {
     if (!guide) return;
     const previous = document.activeElement;
@@ -209,7 +240,9 @@ export default function App() {
             Jara <strong>Studio</strong>
             <span>by Jaramiyo</span>
           </div>
-          <small>{t.version} 0.1</small>
+          <small>
+            {t.version} {appVersion.split('.').slice(0, 2).join('.')}
+          </small>
         </a>
         <div className="header-file">
           <button
@@ -241,6 +274,15 @@ export default function App() {
           )}
         </div>
         <div className="header-actions">
+          <select
+            className="app-language"
+            aria-label={locale === 'es' ? 'Idioma del programa' : 'Application language'}
+            value={locale}
+            onChange={(event) => changeLocale(event.target.value)}
+          >
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select>
           <button
             className="icon-button"
             title={t.open}
@@ -332,7 +374,7 @@ export default function App() {
         <span>
           <HardDrive size={11} />
           {t.local}
-          <b>JARA STUDIO {runtimeVersion || '0.1.0'}</b>
+          <b>JARA STUDIO {runtimeVersion || appVersion}</b>
         </span>
       </footer>
       {guide && (
