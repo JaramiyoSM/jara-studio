@@ -1,0 +1,51 @@
+name: Publish verified portable build
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Successful Windows build run
+        required: true
+      source_sha:
+        description: Expected source commit
+        required: true
+      version:
+        description: Existing release version
+        required: true
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BUILD_RUN: ${{ inputs.run_id }}
+      SOURCE_SHA: ${{ inputs.source_sha }}
+      RELEASE_VERSION: ${{ inputs.version }}
+    steps:
+      - name: Verify the Windows build
+        shell: bash
+        run: |
+          set -euo pipefail
+          [[ "$BUILD_RUN" =~ ^[0-9]+$ ]]
+          [[ "$SOURCE_SHA" =~ ^[a-f0-9]{40}$ ]]
+          [[ "$RELEASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          gh api "repos/$GH_REPO/actions/runs/$BUILD_RUN" > build-run.json
+          test "$(jq -r '.head_sha' build-run.json)" = "$SOURCE_SHA"
+          test "$(jq -r '.conclusion' build-run.json)" = success
+          test "$(jq -r '.path' build-run.json)" = .github/workflows/windows.yml
+      - name: Download the tested build artifact
+        run: gh run download "$BUILD_RUN" --name Jara-Studio-Windows-x64 --dir release
+      - name: Upload the portable executable
+        shell: bash
+        run: |
+          set -euo pipefail
+          file="release/Jara-Studio-$RELEASE_VERSION-Portable-x64.exe"
+          test -f "$file"
+          sha256sum "$file"
+          gh release upload "v$RELEASE_VERSION" "$file"
