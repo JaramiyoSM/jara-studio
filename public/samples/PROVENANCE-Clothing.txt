@@ -1,0 +1,47 @@
+Jara-tools clothing sample provenance
+Verified 2026-10-09. Assets only; this notice does not license Jara-tools website source.
+
+Native garment texture: octa-poljack by Octaflick
+Creator repository: https://github.com/Octaflick/octa_poljack
+Pinned source commit: 589d299ea788fd8d5b1b853b41e1e495358b4049
+Creator license: https://github.com/Octaflick/octa_poljack/blob/589d299ea788fd8d5b1b853b41e1e495358b4049/LICENSE
+License: CC0-1.0. Full creator license is in octa-poljack/LICENSE-CC0.txt.
+Original file: stream/mp_m_freemode_01_octapol^jbib_diff_000_a_uni.ytd
+Bundled original YTD is unchanged. Its single internal texture is jbib_diff_007_a_uni, 2048 x 2048, BC3/DXT5, 12 mip levels.
+The PNG is the decoded color image, with alpha. The 512px WebP is an optimized preview.
+The corresponding YDD and YMT are not bundled here. Native preview requires a converted mesh with matching UVs.
+The creator repository also contains an empty variant b YTD; this empty file is not bundled.
+The pack has not been runtime tested inside GTA/FiveM by Jara-tools.
+
+Poly Haven real photographic fabrics
+License evidence: https://polyhaven.com/license
+All three assets CC0-1.0. No attribution required; creator credits retained voluntarily.
+https://polyhaven.com/a/denim_fabric_03 -- colormass (Photography), Rico Cilliers (Processing).
+https://polyhaven.com/a/fabric_pattern_07 -- Rob Tuytel.
+https://polyhaven.com/a/fabric_leather_02 -- Rob Tuytel.
+Source downloads: official dl.polyhaven.org /file/ph-assets/Textures/jpg/1k/[asset]/[asset]_[diff|col_1|nor_gl|rough]_1k.jpg
+Only creator asset maps are bundled. No protected website renders, logos, avatars, text or preview renders are copied.
+Changes: 1K maps transcoded to WebP quality85; color thumbnails generated at128px. Denim retains its source dimensions1024x1022, other maps1024x1024.
+These are tileable fabric materials, not extracted Rockstar textures or complete freemode clothing UV atlases.
+Color repetition is baked into the local recipe; OpenGL normal and roughness maps apply to the selected 3D material with matching repeat counts.
+PNG/DDS/YTD exports contain color only. GLB can include color, normal and roughness. Native GTA materials require preparation in a suitable external editor.
+
+CC0 legal deed: https://creativecommons.org/publicdomain/zero/1.0/
+Hashes and byte sizes for editable maps are in the bundled sample metadata and checked before loading.
+
+Real static garment: MakeHuman male_casualsuit06 (short-sleeve shirt and jeans)
+Creator/source index: https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html
+Source pack: https://files2.makehumancommunity.org/asset_packs/makehuman_system_assets/makehuman_system_assets_cc0.zip
+Source pack Last-Modified: 2024-04-14. ZIP content length: 280737770 bytes.
+The current source OBJ, mhmat and mhclo each state: explicitly released as CC0 in September 2020.
+Asset copyright holders at release: Data Collection AB, Joel Palmius, Jonas Hauquier / MakeHuman Community.
+Source license: https://github.com/makehumancommunity/makehuman/blob/master/LICENSE.ASSETS.md
+Only graphical mesh and image assets were converted; no MakeHuman application source is included.
+Source OBJ SHA256: 9a86386435d7557a520320b8db4cd0ffe4755040044d1925c2b5730b864a603e
+Source diffuse PNG SHA256: e9a581e0d4eb64c7a031886f2faf109a4703a3046a5fcc97ea9ce9112e99a344
+Source normal PNG SHA256: ccdbf48a86eb922f5ccf38a7d3dc9de8828a6460c687eb84dacf8315d079a343
+Changes: quads triangulated; two disconnected garment components become Cotton shirt and Denim trousers; smooth vertex normals/tangents generated; decimetres converted to metres and feet set to zero; UV V reflected for the glTF/canvas top-left atlas while retaining the source normal tangent frame. Diffuse and normal resized to 1024 PNG. Original atlas/emblem retained as creator asset, not Jara-tools branding or an endorsement. A 256px preview is rendered by Jara-tools.
+The GLB has 7168 triangles, two materials sharing the correct original diffuse and normal maps.
+The editor applies a shared design to materials sharing this atlas; selecting a garment changes its UV guides. The imported source normal strength and roughness are preserved until an override is set.
+This is static learning geometry, not native GTA clothing. No ped fitting, freemode rig, YDD compilation or FiveM runtime validation is provided by the sample.
+The official CC0 garment is not from the outdated 2016 mirror with old license headers.

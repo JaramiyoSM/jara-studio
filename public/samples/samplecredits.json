@@ -1,0 +1,37 @@
+{
+  "human": {
+    "name": "MakeHuman anatomical base",
+    "author": "MakeHuman Community",
+    "license": "CC0-1.0",
+    "source": "https://github.com/makehumancommunity/makehuman/blob/master/LICENSE.ASSETS.md",
+    "note": "163 authored weighted bones; review clips composed by Jaramiyo. Generic skeleton; GTA preparation required."
+  },
+  "clothing": {
+    "name": "Shirt and jeans",
+    "author": "MakeHuman Community / Data Collection AB / Joel Palmius / Jonas Hauquier",
+    "license": "CC0-1.0",
+    "source": "https://static.makehumancommunity.org/assets/assetpacks/makehuman_system_assets.html",
+    "note": "Static original UV garments converted from the official 2024 CC0 system asset pack; no freemode rig."
+  },
+  "weapon": {
+    "name": "Blaster with magazine",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/blaster-kit",
+    "note": "Original model and embedded atlas. Practice geometry; not a native GTA weapon."
+  },
+  "car": {
+    "name": "Sedan",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/car-kit",
+    "note": "Static vehicle practice mesh, not a driveable YFT."
+  },
+  "prop": {
+    "name": "Crate",
+    "author": "Kenney",
+    "license": "CC0-1.0",
+    "source": "https://kenney.nl/assets/car-kit",
+    "note": "Static prop practice geometry, not a compiled YDR."
+  }
+}

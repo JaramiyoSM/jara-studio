@@ -1,0 +1,75 @@
+{
+  "name": "jara-studio",
+  "version": "0.1.0",
+  "description": "Local 3D and resource workspace for FiveM creators",
+  "author": "Jaramiyo",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.cjs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JaramiyoSM/jara-studio.git"
+  },
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5186 --strictPort",
+    "build": "vite build",
+    "start": "electron .",
+    "test": "npm run build && node scripts/verify.mjs",
+    "package": "npm run build && electron-builder --win nsis portable --x64 --publish never",
+    "prebuild": "node scripts/package-notices.mjs"
+  },
+  "dependencies": {
+    "fflate": "0.8.3",
+    "jszip": "3.10.1",
+    "lucide-react": "0.468.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "three": "0.181.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "5.1.0",
+    "electron": "44.7.0",
+    "electron-builder": "26.15.3",
+    "playwright": "1.62.1",
+    "prettier": "3.7.4",
+    "vite": "7.3.7"
+  },
+  "build": {
+    "appId": "com.jaramiyo.jarastudio",
+    "productName": "Jara Studio",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json",
+      "LICENSE",
+      "THIRD_PARTY_NOTICES.txt",
+      "build/icon.png"
+    ],
+    "asar": true,
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "signExecutable": false,
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "Jara-Studio-${version}-Setup-${arch}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Jara-Studio-${version}-Portable-${arch}.${ext}"
+    }
+  }
+}

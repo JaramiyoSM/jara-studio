@@ -1,0 +1,8 @@
+node_modules/
+dist/
+release/
+artifacts/
+package-lock.json
+THIRD_PARTY_NOTICES.txt
+public/fonts/
+public/samples/

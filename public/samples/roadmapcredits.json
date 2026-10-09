@@ -1,0 +1,26 @@
+{
+  "bounds": {
+    "minX": -5000,
+    "maxX": 7000,
+    "minY": -4000,
+    "maxY": 8000
+  },
+  "segments": 70353,
+  "source": "https://github.com/VIRUXE/gtav-coordinate-lookup",
+  "sourceCommit": "99f3bb04a76ec1cadbf02324525f190e62581bbb",
+  "sourceFileSHA256": "52bce72be142c0e3fbbbb048d26fddfd3c4559f5038cbe2921b7b8eb8d5938cc",
+  "upstream": "https://github.com/DurtyFree/gta-v-data-dumps",
+  "artworkAuthor": "Jaramiyo / Jara-tools",
+  "artworkLicense": "CC0-1.0",
+  "note": "Original rendering of factual road coordinates. The data itself is attributed, not relicensed. Schematic ground roads; excludes water paths and Cayo Perico. Not a GTA radar tile.",
+  "full": {
+    "path": "/assets/samples/maps/jara-san-andreas-roadmap.png",
+    "bytes": 1024731,
+    "sha256": "d18b57b17491c79670abfca22c55c21250bec202760efbf1fdbad8d6b844efd0"
+  },
+  "preview": {
+    "path": "/assets/samples/maps/jara-san-andreas-roadmap-preview.webp",
+    "bytes": 28532,
+    "sha256": "ff460abae1a91191b7a4bc7f5b2b3d0812f74e7a97e08dab6048c3c338e9057f"
+  }
+}
